@@ -6,10 +6,10 @@ const {app, BrowserWindow, Menu} = require('electron')
   
   function createWindow () {
     win = new BrowserWindow({
-      width: 800, 
-      height: 600,
+      width: 400, 
+      height: 300,
       //fullscreen:true,
-      frame:false,
+      // frame:false,
       resizable:false
     }) // Основная конфигурация окна
   
