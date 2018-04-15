@@ -1,1 +1,1 @@
-This application is used for display list messages for user.
+Porogram for learning enythign. Some window in your PC will be periodically rotated with information which you wish to learn.

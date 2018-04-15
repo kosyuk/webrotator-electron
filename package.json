@@ -1,17 +1,29 @@
 {
-  "name": "electron-simple-app",
-  "version": "0.0.1",
-  "main": "main.js",
+  "name": "webrotator-electron",
+  "version": "1.0.0",
+  "description": "Porogram for learning enythign. Some window in your PC will be periodically rotated with information which you wish to learn.",
+  "main": "index.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds",
+    "package-win": "electron-packager . webrotator-electron --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Webrotator Electron\"",
+    "package-linux": "electron-packager . webrotator-electron --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/1024x1024.png --prune=true --out=release-builds"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kosyuk/webrotator-electron.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kosyuk/webrotator-electron/issues"
+  },
+  "homepage": "https://github.com/kosyuk/webrotator-electron#readme",
+  "devDependencies": {
+    "electron": "^1.8.4",
+    "electron-packager": "^12.0.1"
   },
   "dependencies": {
-    "axios": "^0.18.0",
-    "npm": "^5.8.0",
-    "to": "^0.2.9",
-    "update": "^0.7.4"
-  },
-  "devDependencies": {
-    "electron": "^1.8.4"
+    "axios": "^0.18.0"
   }
 }
