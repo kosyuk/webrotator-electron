@@ -2,15 +2,19 @@ const {app, BrowserWindow} = require('electron')
   const path = require('path')
   const url = require('url')
   const shell = require('electron').shell // Позволяет реализовать открытие ссылки в браузере
-  const ipc = require('electron').ipcMain // Чтобы окна могли взаимодействовать друг с другом
+  const ipc = require('electron').ipcMain // Чтобы js-файлы могли взаимодействовать и получать информацию от main.js
+  
+  const settings = require('electron-settings') // Позволяет сохранять конфиги приложения
+
+
 
   let win
   
   function createWindow () {
     win = new BrowserWindow({
-      width: 320, 
-      height: 240,
-      //fullscreen:true,
+      width: 620, 
+      height: 420,
+      // fullscreen:true,
       frame:false,
       resizable:false
     })
@@ -30,13 +34,14 @@ const {app, BrowserWindow} = require('electron')
 
   }
   
-  app.on('ready', createWindow) // Создание окна, если приложение готово
+  // app.on('ready', createWindow) // Создание окна, если приложение готово
   
-  app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-      app.quit()
-    }
-  }) // Закрытие окна и сворачивание в док если это OS X
+  // Закрытие окна и сворачивание в док если это OS X
+  // app.on('window-all-closed', () => {
+  //   if (process.platform !== 'darwin') {
+  //     app.quit()
+  //   }
+  // }) 
   
   app.on('activate', () => {
     if (win === null) {
@@ -44,3 +49,49 @@ const {app, BrowserWindow} = require('electron')
     }
   }) // Восстановление окна
 
+
+// ^^^^^ БАЗОВЫЕ НАСТРОЙКИ ПРИЛОЖЕНИЯ ВЫШЕ ^^^^^
+
+
+
+
+  // СОХРАНЕНИЕ НАСТРОЕК ПРОГРАММЫ
+
+  let linksArr = []           // Массив ссылок
+  let lastLinkIndex = 0       // Индекс ссылки, которую использовали последней
+  let lastLink                // Значение строки-ссылки, котоурю пользователь использовал последней
+  
+  app.on('ready', () => {     // Типа так правильно (по мануалу) работать с конфигами приложения
+    createWindow()
+    if (settings.has('linksArr')) {                     // Проверяем, существует ли список ссылок
+        linksArr = settings.get('linksArr')             // Если существует, берём основной массив из конфига
+        lastLinkIndex = settings.get('lastLinkIndex')   // Берём индекс массива для последней используемой ссылки
+        lastLink = linksArr[lastLinkIndex]              // Получаем последнюю используемую ссылку
+
+        console.log(linksArr)
+        console.log(lastLinkIndex)
+        console.log(lastLink)
+
+        // ipc.send('load-saved-links', linksArr)
+        // ipc.on('load-saved-links', function(event, arg) {
+        // win.webContents.send('load-saved-links', 123)
+        // })
+    }
+    // settings.set('linksArr', ['vkontakte.ru', 'yandex.ru'])
+    // settings.set('lastLinkIndex', 1)
+  });
+
+
+
+  ipc.on('add-new-link', function(event, arg) {
+    console.log(arg)
+    linksArr.push(arg)
+    console.log(linksArr)
+    settings.set('linksArr', linksArr)
+    lastLinkIndex = linksArr.length - 1
+    settings.set('lastLinkIndex', lastLinkIndex)
+  })
+
+
+  // Передать ссылки из конфига при открытии программы
+  // Поменять индекс последней ссылки, когда выбрали другую
