@@ -1,19 +1,16 @@
 const {app, BrowserWindow} = require('electron')
   const path = require('path')
   const url = require('url')
-  const shell = require('electron').shell // Позволяет реализовать открытие ссылки в браузере
-  const ipc = require('electron').ipcMain // Чтобы js-файлы могли взаимодействовать и получать информацию от main.js
-  
+  const shell = require('electron').shell       // Позволяет реализовать открытие ссылки в браузере
+  const ipc = require('electron').ipcMain       // Чтобы js-файлы могли взаимодействовать и получать информацию от main.js
   const settings = require('electron-settings') // Позволяет сохранять конфиги приложения
-
-
 
   let win
   
   function createWindow () {
     win = new BrowserWindow({
-      width: 620, 
-      height: 420,
+      width:  875,  // 320
+      height: 600,  // 220
       // fullscreen:true,
       frame:false,
       resizable:false
@@ -23,7 +20,7 @@ const {app, BrowserWindow} = require('electron')
       pathname: path.join(__dirname, 'src/index.html'),
       protocol: 'file:',
       slashes: true
-    })) // Загрузка index-файла главного окна
+    }))
   
     // Инструменты разработчика для отладки
     win.webContents.openDevTools()
@@ -79,11 +76,12 @@ const {app, BrowserWindow} = require('electron')
     }
     // settings.set('linksArr', ['vkontakte.ru', 'yandex.ru'])
     // settings.set('lastLinkIndex', 1)
+    // settings.deleteAll()
   });
 
 
 
-  ipc.on('add-new-link', function(event, arg) {
+  ipc.on('add-new-link-to-settings', function(event, arg) {
     console.log(arg)
     linksArr.push(arg)
     console.log(linksArr)
@@ -92,6 +90,31 @@ const {app, BrowserWindow} = require('electron')
     settings.set('lastLinkIndex', lastLinkIndex)
   })
 
+  ipc.on('new-window-size', function(event, width, height) {
+    win.setSize(width, height)
+    win.center()
+  })
+  ipc.on('send-words', function(event, arg) {
+    win.webContents.send('get-words', arg)
+  })
+  ipc.on('send-setup', function(event, arg) {
+    win.webContents.send('get-setup', arg)
+  })
 
-  // Передать ссылки из конфига при открытии программы
-  // Поменять индекс последней ссылки, когда выбрали другую
+
+
+  ipc.on('new-link-to-mainjs', function(event, arg) {
+    win.webContents.send('new-link-from-main-to-index', arg)
+  })
+
+
+
+
+
+  
+
+
+  // БАГИ
+  // Когда 0 ссылок, то ошибка. Нужна проверка
+  // Нужна проверка на пустую строку-ссылку
+  // Лучше видеть в списке не ссылку, а название словаря

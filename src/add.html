@@ -1,21 +1,54 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+  <html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Webrotator</title>
+      <link rel="stylesheet" href="../assets/css/foundation.css">
+      <link rel="stylesheet" href="../assets/css/style.css">
+      <link rel="stylesheet" href="../assets/css/add.css">
+      <link rel="stylesheet" href="../assets/foundation-icons/foundation-icons.css">
+      <script src="../assets/js/vendor/modernizr.js"></script>
 
-    <link rel="stylesheet" href="../assets/css/main.css">
-    <link rel="stylesheet" href="../assets/css/add.css">
+      <!-- <link rel="stylesheet" href="../assets/css/main.css"> -->
+    </head>
+    <body>
+      
+      <!-- <img src="../assets/images/up.svg"> -->
+      <!-- <button id="notifyBtn">Кнопка</button> -->
 
-</head>
-<body>
+      <div class="row caption">
+        <div class="small-9 columns">
+          <h6>Добавление ссылки</h6>
+        </div>
+        <div class="small-3 columns captionBtn">
+          <a id="closeBtn" class="button tiny info right round"><i class="fi-x"></i></a>
+        </div>
+      </div>
 
 
-    
-    <a id="closeBtn">Close Window</a><br>
+      <div class="row addLinkField">
+        <div class="small-12 columns">
+            <div class="row collapse">
+                <div class="small-9 columns">
+                    <input id="textEdit" type="text" placeholder="Скопируйте сюда новую ссылку">
+                </div>
+                <div class="small-3 columns">
+                  <button id="addBtn" class="postfix">Добавить</button>
+                </div>
+              </div>
+        </div>
+      </div>
 
-    <script src="add.js"></script>
-</body>
-</html>
+
+
+
+      <script src="../assets/js/vendor/jquery.js"></script>
+      <script src="../assets/js/foundation.min.js"></script>
+      <script>
+        $(document).foundation();
+      </script>
+
+      <script src="add.js"></script>
+    </body>
+  </html>

@@ -1,0 +1,87 @@
+html, body { height: 100%; }
+
+body {
+    background-color:rgb(57,186,225);
+    /* background-color:#347B98; */
+    color: white;
+    -webkit-app-region: drag
+}
+
+.parent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+.caption {
+    padding: 6px;
+    background-color: rgba(0,0,0,.1);
+    margin: 0;
+    color: #fff;
+    -webkit-app-region: drag;  /* Позволяет перемещать окно за эту область */
+    position: fixed;
+    top: 0; left: 0;
+}
+
+.caption select, .caption button, button.tiny, .button.tiny { margin: 0; }
+
+button, .button {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.caption button, .caption .button {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.caption .postfix, .addLinkField .postfix { border: none; }
+
+.darkBtn { background-color: #0082B0; }
+
+.caption .columns { padding: 0; }
+
+#closeBtn {
+    padding: 5px 7px;
+    background-color: yellow;
+    color: #777;
+    margin-left: 3px;
+}
+#closeBtn:hover {
+    color: #333;
+    opacity: .9;
+}
+
+#playBtn {
+    padding: 5px 10px 5px 12px;
+    background-color: #0f0;
+    color: #777;
+    font-size: 17px;
+}
+#playBtn:hover {
+    color: #333;
+    opacity: .9;
+}
+
+.caption h6 {
+    padding-left: 8px;
+    margin: 0;
+    margin-bottom: 2px;
+}
+
+#textView {
+    font-size: 20px; 
+    /* -webkit-user-select: none; */
+    /* -webkit-app-region: drag;  Позволяет перемещать окно за эту область */
+}
+
+.footer {
+    padding: 6px;
+    background-color: rgba(0,0,0,.1);
+    margin: 0;
+    color: #fff;
+    position: fixed;
+    bottom: 0; left: 0;
+}
+
+.footer .tiny { font-size: 16px; }

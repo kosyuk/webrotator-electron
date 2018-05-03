@@ -2,35 +2,66 @@
   <html>
     <head>
       <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Webrotator</title>
-      <link rel="stylesheet" href="../assets/css/main.css">
+      <link rel="stylesheet" href="../assets/css/foundation.css">
+      <link rel="stylesheet" href="../assets/css/style.css">
+      <link rel="stylesheet" href="../assets/foundation-icons/foundation-icons.css">
+      <script src="../assets/js/vendor/modernizr.js"></script>
+
+      <!-- <link rel="stylesheet" href="../assets/css/main.css"> -->
     </head>
-    <body>
+    <body class="parent">
       
       <!-- <img src="../assets/images/up.svg"> -->
       <!-- <button id="notifyBtn">Кнопка</button> -->
 
-      <select id="listLinks">
-      </select>      
-      <br>
-      <br>
+      <div class="row caption">
+        <div class="small-9 columns">
+          <div class="row collapse">
+            <div class="small-8 columns">
+              <select id="listLinks"></select>
+            </div>
+            <div class="small-2 columns">
+              <button id="addLinkWin" class="postfix darkBtn"><i class="fi-plus"></i></button>
+            </div>
+            <div class="small-2 columns">
+              <button id="delLink" class="postfix"><i class="fi-minus"></i></button>
+            </div>
+          </div>
+          
+        </div>
+        <div class="small-3 columns captionBtn">
+          <a id="closeBtn" class="button tiny info right round"><i class="fi-x"></i></a>
+          <a id="playBtn" class="button tiny info right round"><i class="fi-play"></i></a>
+        </div>
+      </div>
 
-      <input id="textEdit" type="text" placeholder="Добавьте новую ссылку">
-      <button id="addBtn">Добавить</button>
+      <div class="row">
+        <div class="small-12 columns">
+          <p id="textView" class="text-center">Здесь должны выводиться слова. Это может быть несколько предложений. Так работает <a id="getJson">JSON</a></p>
+        </div>
+      </div>
+      
 
+      <div class="row footer">
+        <div class="small-12 columns text-center">
+          <ul class="button-group round">
+            <li><a href="#" class="button tiny" id="leftBtn"><i class="fi-rewind"></i></a></li>
+            <li><a href="#" class="button tiny" id="deleteBtn"><i class="fi-x"></i></a></li>
+            <li><a href="#" class="button tiny" id="rightBtn"><i class="fi-fast-forward"></i></a></li>
+          </ul>
+        </div>
+      </div>
 
-      <br>
-      <br>
-      <button id="getJson">JSON</button>
-
-
-      <br>
-      <br>
-      <p id="textView">Здесь должны выводиться слова</p>
-
-      <br><br>
-      <a id="closeBtn">[x] Закрыть окошечко</a>
 
       <script src="index.js"></script>
+
+      <script src="../assets/js/vendor/jquery.js"></script>
+      <script src="../assets/js/foundation.min.js"></script>
+      <script>
+        $(document).foundation();
+      </script>
+
     </body>
   </html>
