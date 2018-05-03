@@ -105,8 +105,6 @@ function getJsonData(jsonLink) {
             wordsObjArr = res.data.words
             jsonSetup = res.data.setup
 
-            // console.log(wordsObjArr[1].name)
-            // console.log(jsonSetup.width)
             ipc.send('new-window-size', jsonSetup.width, jsonSetup.height)
             ipc.send('send-words', wordsObjArr)
             ipc.send('send-setup', jsonSetup)
@@ -120,7 +118,7 @@ function getJsonData(jsonLink) {
 
 ipc.on('get-words', function(event, arg) {
     wordsObjArr = arg
-    // console.log(wordsObjArr[1].name)
+    console.log(wordsObjArr[1].name)
     wordsObjArr.sort(function (a, b) {
         if (a.priority > b.priority) {
           return -1;
