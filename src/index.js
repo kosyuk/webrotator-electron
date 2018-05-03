@@ -91,30 +91,6 @@ closeBtn.addEventListener('click', function(event) {
 })
 
 
-function getWords() {
-    axios.get('http://localhost:9000/json/sample.json')
-        .then(res => {
-            const listWords = res.data.words
-            console.log(listWords)              // listWords - это массив объектов
-            const wordsArr = []
-            listWords.forEach((element) => {
-                // console.log(element.name)    // Выведет значением name данного объекта
-                // console.log(element)         // Выведет значения переменных объекта
-                wordsArr.push(element.name)     // В цикле добавляет в новый массив элементы
-            });
-            console.log(wordsArr)               // Выведет новый массив из элементов name объектов массива listWords
-            const wordsArr2 = listWords.map((element) => {return element.name})     // То же самое, что и выше
-            console.log(wordsArr2.join(', '))  // Чтобы вывести значения массива в виде строки (а не массива) через запятую
-            // console.log(listWords.toLocaleString('en'))
-
-            console.log(listWords[1].name)      // Получение значения name объекта 1 в массиве объектов listWords
-            console.log(listWords[1])           // Все элементы объекта 1 в массиве объектов listWords
-
-        })
-        .catch(res => {  // Если ошибка, то выполняется то, что ниже
-            console.log(321)
-        })
-}
 const getJson = document.getElementById('getJson')
 getJson.addEventListener( 'click', getWords )               // без скобок, то подвязывается ссылка на функцию
 // getJson.addEventListener( 'click', () => {getWords()} )  // со скобками сначала при загрузке приложения вызывается функция и её результат подвязывается к клику
