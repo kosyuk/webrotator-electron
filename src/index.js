@@ -1,41 +1,14 @@
-// const {app, BrowserWindow} = require('electron')
-const electron = require('electron')  // ';' ставится, если в одной строке несколько операторов. Но желательно ставить ';'
+const electron = require('electron')
 const path = require('path')
 const BrowserWindow = electron.remote.BrowserWindow
-const remote = electron.remote      // <<< ???
-const axios = require('axios')      // Для раоты с json
+const remote = electron.remote
+const axios = require('axios')
 const ipc = electron.ipcRenderer
 
-const settings = require('electron').remote.require('electron-settings');  // Подключение конфига не в main.js
+const settings = require('electron').remote.require('electron-settings');  
 
-
-
-
-// Это базовые настройки при загрузке
-// Дальше нужно записывать значение последней введённой ссылки и её индекс в массиве
-
-
-
-// const addBtn = document.getElementById('addBtn')
 let textView = document.getElementById('textView')
 let listLinks = document.getElementById('listLinks')
-// let textEdit = document.getElementById('textEdit')
-// addBtn.addEventListener('click', function(event) {
-//     // Добавление новой ссылки в выпадающий список
-//     var addOption = document.createElement("option");
-//     addOption.value = textEdit.value;
-//     addOption.text = textEdit.value;
-//     listLinks.add(addOption, null);
-//     // listLinks.add(addOption, listLinks.options[0]);
-//     // При добавлении последнего элемента делаем его активным
-//     listLinks.selectedIndex = listLinks.length - 1
-
-//     // Отправка значения новой ссылки в конфиг через main.js 
-//     ipc.send('add-new-link-to-settings', textEdit.value)
-
-//     // textEdit.value = '';
-
-// })
 
 const delLink = document.getElementById('delLink')
 delLink.addEventListener('click', function(event) {
@@ -56,10 +29,8 @@ window.onload = function () {
     // Загружаем ссылки в выпадающий список
     let linksArr = []
     linksArr = settings.get('linksArr')   
-    console.log(linksArr)          
     if (linksArr.length != 0) {
         linksArr.forEach(function(element) {
-            // console.log(element);
             var addOption = document.createElement("option");
             addOption.value = element;
             addOption.text = element;
@@ -75,13 +46,11 @@ window.onload = function () {
     
 }
 
-
 // Нужно при изменении элемента записывать его значение в конфиг
 listLinks.addEventListener('change', function(event) {
-    settings.set('lastLinkIndex', listLinks.selectedIndex);     // console.log(settings.get('lastLinkIndex'))
+    settings.set('lastLinkIndex', listLinks.selectedIndex);
     jsonLink = listLinks.value; getJsonData(jsonLink);           // Берём эту переменную, при изменении селекта
 })
-
 
 // Закрытия окна по клику на элементе
 const closeBtn = document.getElementById('closeBtn')
@@ -89,12 +58,6 @@ closeBtn.addEventListener('click', function(event) {
     let window = remote.getCurrentWindow();
     window.close()
 })
-
-
-const getJson = document.getElementById('getJson')
-getJson.addEventListener( 'click', getWords )               // без скобок, то подвязывается ссылка на функцию
-// getJson.addEventListener( 'click', () => {getWords()} )  // со скобками сначала при загрузке приложения вызывается функция и её результат подвязывается к клику
-
 
 let jsonLink      // Ссылка на JSON
 var wordsObjArr   // Массив объектов слов и их параметров
@@ -112,24 +75,14 @@ function getJsonData(jsonLink) {
         .catch(res => {     // Если ошибка, срабатывает это исключение
             console.log('JSON ошибка')
         })
-    // console.log(wordsObjArr[1].name)
 }
 
 
+var wordsSortArr
 ipc.on('get-words', function(event, arg) {
     wordsObjArr = arg
-    console.log(wordsObjArr[1].name)
-    wordsObjArr.sort(function (a, b) {
-        if (a.priority > b.priority) {
-          return -1;
-        }
-        if (a.priority < b.priority) {
-          return 1;
-        }
-        // a должно быть равным b
-        return 0;
-    })
-    wordsObjArr.forEach( (element) => {console.log(element)} )
+    wordsObjArr = getRandomArr(wordsObjArr)
+    // При загрузке массива сразу добавляем первое отсортированное слово
     wordCount = 0
     wordOutput(wordCount)
     lenArr = wordsObjArr.length - 1
@@ -140,7 +93,6 @@ ipc.on('get-setup', function(event, arg) {
     jsonSetup = arg
     jsonTimeout = arg.timeout
     jsonIntensity = arg.intensity
-    // console.log(jsonSetup.timeout)
 })
 
 
@@ -149,7 +101,6 @@ ipc.on('get-setup', function(event, arg) {
 const addLinkWin = document.getElementById('addLinkWin')
 function openAddLinkWin() {
     const modalPath = path.join('file://', __dirname, 'add.html')
-    // let win = new BrowserWindow({ frame:false, transparent:true, alwaysOnTop:true, modal: true, width:400, height:200 })
     let win = new BrowserWindow({ frame:false, transparent:true, alwaysOnTop:true, width:500, height:115 })
         // Чтобы transparent:true работало, нужно ещё в стилях задать прозрачный цвет фона для html, body
     win.on('close', function() {win = null})
@@ -161,25 +112,17 @@ addLinkWin.addEventListener('click', openAddLinkWin )
 
 
 ipc.on('new-link-from-main-to-index', function(event, arg) {
-    // console.log(arg)
-    
     // Добавление новой ссылки в выпадающий список
     var addOption = document.createElement("option");
     addOption.value = arg;
     addOption.text = arg;
     jsonLink = arg; getJsonData(jsonLink);                    // Берём эту переменную, когда добавили новую ссылку в программу
     listLinks.add(addOption, null);
-    // listLinks.add(addOption, listLinks.options[0]);
     // При добавлении последнего элемента делаем его активным
     listLinks.selectedIndex = listLinks.length - 1
-
     // Отправка значения новой ссылки в конфиг через main.js 
     ipc.send('add-new-link-to-settings', arg)
-    
 })
-
-
-
 
 var wordCount = 0
 var lenArr
@@ -200,9 +143,6 @@ function wordOutput(indexInArr) {
     textView.innerHTML = wordsObjArr[indexInArr].name + '<hr>' + wordsObjArr[indexInArr].description
 }
 
-
-
-
 var win = remote.getCurrentWindow();
 var timerCount = 0
 function playApp() {
@@ -216,7 +156,10 @@ function playApp() {
                 break;
             case jsonTimeout:
                     ++wordCount;
-                    if (wordCount > lenArr) { wordCount = 0 };
+                    if (wordCount > lenArr) { 
+                        wordCount = 0 
+                        wordsObjArr = getRandomArr(wordsObjArr)
+                    };
                     wordOutput(wordCount);
                     win.showInactive();
                 break;
@@ -229,21 +172,13 @@ function playApp() {
     else {
         timerCount = 0
     }
-    // console.log(jsonTimeout)
-    // console.log(jsonIntensity)
-    // console.log(f)
-    // // console.log(v)
-    // console.log(timerCount)
 }
 playApp()
 setInterval(playApp, 1000)
 
-
-
 const deleteBtn = document.getElementById('deleteBtn')
 deleteBtn.addEventListener('click', function(event) {
     let deleteID = wordsObjArr[wordCount].id
-    console.log(deleteID)
     axios.post(jsonLink, {
         // firstName: 'Fred',
         id: deleteID
@@ -256,25 +191,49 @@ deleteBtn.addEventListener('click', function(event) {
       });
 })
 
-
 const playBtn = document.getElementById('playBtn')
 playBtn.addEventListener('click', function(event) {
     win.hide()
 })
 
+function getRandomElement(arg) {    // Возвращает выбранный элемент массива. И сам массив без этого элемента
+    const inputArr = [...arg]       // Присваиваем входящий массив внутреннему, чтобы удаление не удаляло из оригинального массива
+    const priorityArr = inputArr.map((element) => { return element.priority })    
+    var pl = priorityArr.length - 1
 
+    var sinceArr = []
+    var tillArr = []
+    sinceArr[0] = 1
+    for (var i = 0; i < pl; i++) {
+        tillArr[i] = sinceArr[i] + priorityArr[i] - 1;
+        sinceArr[i+1] = tillArr[i] + 1;
+    }
+    tillArr[pl] = sinceArr[pl] + priorityArr[pl] - 1
 
+    r = Math.floor(Math.random() * tillArr[pl]) + 1;  // Random
+    for (var i = 0; i <= pl; i++) {
+        if (r >= sinceArr[i] && r <= tillArr[i]) {
+            var returnedElement = inputArr[i]
+            inputArr.splice(i, 1);      // Удаляем элемент из массива
+            return [returnedElement, inputArr]
+            break;
+        }
+    }
+}
+function getRandomArr(arg) {
+    var inputArr = [...arg]
+    var res = getRandomElement(inputArr)
+    var selElem = res[0]
+    var restElem = res[1]
+    var outputArr = []
+    outputArr.push(selElem)
 
+    while (restElem.length > 0) {
+        res = getRandomElement(restElem)
+        selElem = res[0]
+        restElem = res[1]
+        outputArr.push(selElem)
+    }
 
-
-// Модальное окно неправильно работает. Можно создать хоть 10 окон 
-// https://github.com/electron/electron/blob/master/docs/api/browser-window.md#browserwindowsetcontentsizewidth-height
-
-// Нужна проверка на ввод пустой, дублирующей или ошибочной ссылки
-
-// Энтер в эдите инициирует нажатие кнопки Добавить
-
-
-
-
-
+    return outputArr
+}
