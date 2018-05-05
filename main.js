@@ -28,17 +28,7 @@ const {app, BrowserWindow} = require('electron')
     win.on('closed', () => {
       win = null
     }) // Закрытие главного окна
-
   }
-  
-  // app.on('ready', createWindow) // Создание окна, если приложение готово
-  
-  // Закрытие окна и сворачивание в док если это OS X
-  // app.on('window-all-closed', () => {
-  //   if (process.platform !== 'darwin') {
-  //     app.quit()
-  //   }
-  // }) 
   
   app.on('activate', () => {
     if (win === null) {
@@ -46,50 +36,26 @@ const {app, BrowserWindow} = require('electron')
     }
   }) // Восстановление окна
 
-
-// ^^^^^ БАЗОВЫЕ НАСТРОЙКИ ПРИЛОЖЕНИЯ ВЫШЕ ^^^^^
-
-
-
-
   // СОХРАНЕНИЕ НАСТРОЕК ПРОГРАММЫ
-
   let linksArr = []           // Массив ссылок
   let lastLinkIndex = 0       // Индекс ссылки, которую использовали последней
   let lastLink                // Значение строки-ссылки, котоурю пользователь использовал последней
   
-  app.on('ready', () => {     // Типа так правильно (по мануалу) работать с конфигами приложения
+  app.on('ready', () => {     
     createWindow()
     if (settings.has('linksArr')) {                     // Проверяем, существует ли список ссылок
         linksArr = settings.get('linksArr')             // Если существует, берём основной массив из конфига
         lastLinkIndex = settings.get('lastLinkIndex')   // Берём индекс массива для последней используемой ссылки
         lastLink = linksArr[lastLinkIndex]              // Получаем последнюю используемую ссылку
-
-        console.log(linksArr)
-        console.log(lastLinkIndex)
-        console.log(lastLink)
-
-        // ipc.send('load-saved-links', linksArr)
-        // ipc.on('load-saved-links', function(event, arg) {
-        // win.webContents.send('load-saved-links', 123)
-        // })
     }
-    // settings.set('linksArr', ['vkontakte.ru', 'yandex.ru'])
-    // settings.set('lastLinkIndex', 1)
-    // settings.deleteAll()
   });
 
-
-
   ipc.on('add-new-link-to-settings', function(event, arg) {
-    console.log(arg)
     linksArr.push(arg)
-    console.log(linksArr)
     settings.set('linksArr', linksArr)
     lastLinkIndex = linksArr.length - 1
     settings.set('lastLinkIndex', lastLinkIndex)
   })
-
   ipc.on('new-window-size', function(event, width, height) {
     win.setSize(width, height)
     win.center()
@@ -100,21 +66,6 @@ const {app, BrowserWindow} = require('electron')
   ipc.on('send-setup', function(event, arg) {
     win.webContents.send('get-setup', arg)
   })
-
-
-
   ipc.on('new-link-to-mainjs', function(event, arg) {
     win.webContents.send('new-link-from-main-to-index', arg)
   })
-
-
-
-
-
-  
-
-
-  // БАГИ
-  // Когда 0 ссылок, то ошибка. Нужна проверка
-  // Нужна проверка на пустую строку-ссылку
-  // Лучше видеть в списке не ссылку, а название словаря

@@ -71,8 +71,6 @@ button, .button {
 
 #textView {
     font-size: 20px; 
-    /* -webkit-user-select: none; */
-    /* -webkit-app-region: drag;  Позволяет перемещать окно за эту область */
 }
 
 .footer {
